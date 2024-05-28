@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Student Management</title>
+    <script>
+        function filterStudents() {
+            let input = document.getElementById('searchInput').value;
+            let rows = document.getElementById('studentTable').rows;
+
+            for (let i = 1; i < rows.length; i++) {
+                let name = rows[i].cells[1].innerText.toLowerCase();
+                if (name.includes(input.toLowerCase())) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+<h1>Student Management</h1>
+<form action="/students" method="get">
+    <input type="text" id="searchInput" name="name" th:value="${searchTerm}" onkeyup="filterStudents()" placeholder="Search by name...">
+    <input type="submit" value="Search">
+</form>
+<table border="1" id="studentTable">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="student : ${students}">
+            <td th:text="${student.id}"></td>
+            <td th:text="${student.name}"></td>
+            <td th:text="${student.age}"></td>
+            <td>
+                <a th:href="@{/students/edit/{id}(id=${student.id})}">Edit</a>
+                <a th:href="@{/students/delete/{id}(id=${student.id})}">Delete</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<a href="/students/new">Add New Student</a>
+</body>
+</html>
